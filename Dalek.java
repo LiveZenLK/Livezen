@@ -1,12 +1,14 @@
+package LiveZen;
 import robocode.*;
 import java.awt.Color;
+import static robocode.util.Utils.normalRelativeAngleDegrees;
 
 // API help : http://robocode.sourceforge.net/docs/robocode/robocode/Robot.html
 
 /**
  * LiveZen1 - a robot by (your name here)
  */
-public class Dalek extends BravoBot
+public class Dalek extends CharlieBot
 {
 
 
@@ -32,87 +34,162 @@ public class Dalek extends BravoBot
    //
 
 
-	/**
-	 * run: LiveZen1's default behavior
-	 */
-	private double velocity;
+   // There's clearly an invsion of wall huggers and we need to beat them.
+   // This game might as well as be called Spiderman,
+   // Need to look over the code for CharlieBot
+   // Figure out what we need to do to win.
+   // Build a tracker
 
-	public void run() {
-		// Initialization of the robot should be put here
-		this.velocity = 65;
-		 setColors(Color.red,Color.red,Color.red); // body,gun,radar
 
-		// Robot main loop
-		while(true) {
-			// Replace the next 4 lines with any behavior you would like
-			movement(this.velocity);
-		}
-	}
+   int count = 0; // Keeps track of how long we've
+ 	// been searching for our target
+ 	double gunTurnAmt; // How much to turn our gun when searching
+ 	String trackName; // Name of the robot we're currently tracking
 
-	/**
-	 * onScannedRobot: What to do when you see another robot
-	 */
-	public void onScannedRobot(ScannedRobotEvent e){
-    double distance = e.getDistance(); //get the distance of the scanned robot
-    if(distance > 800) //this conditions adjust the fire force according the distance of the scanned robot.
-        fire(5);
-    else if(distance > 600 && distance <= 800)
-        fire(5);
-    else if(distance > 400 && distance <= 600)
-        fire(5);
-    else if(distance > 200 && distance <= 400)
-        fire(5);
-    else if(distance < 200)
-        fire(5);
+ 	/**
+ 	 * run:  Tracker's main run function
+ 	 */
+ 	public void run() {
+ 		// Set colors
+ 		setColors(Color.red,Color.red,Color.red); // body,gun,radar
 
-	  System.out.println("EXTERMINATE!");
-	}
+ 		// Prepare gun
+ 		trackName = null; // Initialize to not tracking anyone
+ 		setAdjustGunForRobotTurn(false); // Keep the gun still when we turn
+ 		gunTurnAmt = 10; // Initialize gunTurn to 10
 
-	public void movement( double velocity ){
+ 		// Loop forever
+ 		while (true) {
+ 			// turn the Gun (looks for enemy)
+ 			turnRight(gunTurnAmt);
+ 			// Keep track of how long we've been looking
+ 			count++;
+ 			// If we've haven't seen our target for 2 turns, look left
+ 		// 	if (count > 2) {
+ 		// 		gunTurnAmt = -10;
+ 		// 	}
+ 			// If we still haven't seen our target for 5 turns, look right
+ 			if (count > 1) {
+ 				gunTurnAmt = 10;
+ 			}
+ 			// If we *still* haven't seen our target after 10 turns, find another target
+ 			if (count > 11) {
+ 				trackName = null;
+ 			}
+ 		}
+ 	}
 
-		turnLeft(30);
-		ahead(getVelocity());
 
-	}
+ 	/**
+ 	 * onScannedRobot:  Here's the good stuff
+ 	 */
+ 	public void onRobotDetected(ScannedRobotEvent e) {
 
-	public double reverseMovement (double x) {
-		System.out.println("reversed");
+ 		// If we have a target, and this isn't it, return immediately
+ 		// so we can get more ScannedRobotEvents.
+ 		if (trackName != null && !e.getName().equals(trackName)) {
+ 			return;
+ 		}
 
-	return -x;
-	}
+ 		// If we don't have a target, well, now we do!
+ 		if (trackName == null) {
+ 			trackName = e.getName();
+ 			out.println("Tracking " + trackName);
+ 		}
+ 		// This is our target.  Reset count (see the run method)
+ 		count = 0;
+ 		// If our target is too far away, turn and move toward it.
+ 		if (e.getDistance() > 800) {
+ 			gunTurnAmt = normalRelativeAngleDegrees(e.getBearing() + (getHeading() - getRadarHeading()));
 
-	public void search() {
-		turnGunRight(360);
-		turnGunLeft(360);
-	}
-	/**
-	 * onHitByBullet: What to do when you're hit by a bullet
-	 */
-	public void onHitByBullet(HitByBulletEvent e) {
+ 			turnRight(gunTurnAmt+75);
+      fire(1);// Try changing these to setturnRight,
+ 			turnRight(e.getBearing()); // and see how much Tracker improves...
+ 			// (you'll have to make Tracker an AdvancedRobot)
+ 			ahead(e.getDistance() - 140);
+ 			return;
+ 		}
+
+    if (e.getDistance() > 600 && e.getDistance() <= 800) {
+ 			gunTurnAmt = normalRelativeAngleDegrees(e.getBearing() + (getHeading() - getRadarHeading()));
+
+ 			turnRight(gunTurnAmt+35);
+      fire(1.5);// Try changing these to setturnRight,
+ 			turnRight(e.getBearing()); // and see how much Tracker improves...
+ 			// (you'll have to make Tracker an AdvancedRobot)
+ 			ahead(e.getDistance() - 140);
+ 			return;
+ 		}
+
+    if (e.getDistance() < 600 ) {
+ 			gunTurnAmt = normalRelativeAngleDegrees(e.getBearing() + (getHeading() - getRadarHeading()));
+
+ 			turnRight(gunTurnAmt+20);
+      fire(1.5);// Try changing these to setturnRight,
+ 			turnRight(e.getBearing()); // and see how much Tracker improves...
+ 			// (you'll have to make Tracker an AdvancedRobot)
+ 			ahead(e.getDistance() - 140);
+ 			return;
+ 		}
+
+    if (e.getDistance() < 400 ) {
+ 			gunTurnAmt = normalRelativeAngleDegrees(e.getBearing() + (getHeading() - getRadarHeading()));
+
+ 			turnRight(gunTurnAmt);
+      fire(1.5);// Try changing these to setturnRight,
+ 			turnRight(e.getBearing()); // and see how much Tracker improves...
+ 			// (you'll have to make Tracker an AdvancedRobot)
+ 			ahead(e.getDistance() - 140);
+ 			return;
+ 		}
+
+ 		// Our target is close.
+ 		gunTurnAmt = normalRelativeAngleDegrees(e.getBearing() + (getHeading() - getRadarHeading()));
+ 		turnRight(gunTurnAmt);
+ 		fire(3);
+
+ 		// Our target is too close!  Back up.
+ 		if (e.getDistance() < 100) {
+ 			if (e.getBearing() > -90 && e.getBearing() <= 90) {
+ 				back(40);
+ 			} else {
+ 				ahead(40);
+ 			}
+ 		}
+ 		scan();
+ 	}
+
+ 	/**
+ 	 * onHitRobot:  Set him as our new target
+ 	 */
+ 	public void onHitRobot(HitRobotEvent e) {
+ 		// Only print if he's not already our target.
+ 		if (trackName != null && !trackName.equals(e.getName())) {
+ 			out.println("Tracking " + e.getName() + " due to collision");
+ 		}
+ 		// Set the target
+ 		trackName = e.getName();
+ 		// Back up a bit.
+ 		// Note:  We won't get scan events while we're doing this!
+ 		// An AdvancedRobot might use setBack(); execute();
+ 		gunTurnAmt = normalRelativeAngleDegrees(e.getBearing() + (getHeading() - getRadarHeading()));
+ 		turnRight(gunTurnAmt);
+ 		fire(3);
+ 		back(50);
+ 	}
+
+  public void onHitByBullet(HitByBulletEvent e) {
 		// Replace the next line with any behavior you would like
-		ahead(100);
-		turnLeft(120);
+		behind(60);
 	}
 
-	void OnHitRobot(HitRobotEvent evnt){
-    System.out.println("OUCH!");
-	}
-
-	/**
-	 * onHitWall: What to do when you hit a wall
-	 */
-	public void onHitWall(HitWallEvent e) {
-		// Replace the next line with any behavior you would like
-		System.out.println("");
-		movement(reverseMovement(getVelocity()));
-	}
-
-  public double getVelocity(){
-    return this.velocity;
-  }
-
-  public void setVelocity(double velocity){
-    this.velocity = velocity;
-  }
-
-}
+ 	/**
+ 	 * onWin:  Do a victory dance
+ 	 */
+ 	public void onWin(WinEvent e) {
+ 		for (int i = 0; i < 50; i++) {
+ 			turnRight(30);
+ 			turnLeft(30);
+ 		}
+ 	}
+ }
