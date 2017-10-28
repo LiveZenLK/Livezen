@@ -1,4 +1,3 @@
-package LiveZen;
 import robocode.*;
 //import java.awt.Color;
 
@@ -7,7 +6,7 @@ import robocode.*;
 /**
  * LiveZen1 - a robot by (your name here)
  */
-public class LiveZen1 extends AlphaBot
+public class Livezenbot extends AlphaBot
 {
 	/**
 	 * run: LiveZen1's default behavior
@@ -46,7 +45,7 @@ public class LiveZen1 extends AlphaBot
     else if(distance < 200)
         fire(1);
 
-	System.out.println("hello");
+	  System.out.println("EXTERMINATE!");
 	}
 
 	public void movement( double velocity ){
