@@ -11,6 +11,9 @@ public class Livezenbot extends AlphaBot
 	/**
 	 * run: LiveZen1's default behavior
 	 */
+
+   // LINK TO EXCEL SHEET : https://docs.google.com/spreadsheets/d/1FSfENi4A38rAx8164rR_tD4RpWI5eAGiJUji72JDSew/edit?usp=sharing
+   
 	private double velocity;
 
 	public void run() {
@@ -105,4 +108,5 @@ public class Livezenbot extends AlphaBot
   // Can we change our behaviour at a certain game tick to become a wallbot?
   // Need to find the wall bot code.
 
+  // LINK TO EXCEL SHEET : https://docs.google.com/spreadsheets/d/1FSfENi4A38rAx8164rR_tD4RpWI5eAGiJUji72JDSew/edit?usp=sharing
 }
