@@ -16,7 +16,7 @@ public class LiveZen1 extends AlphaBot
 
 	public void run() {
 		// Initialization of the robot should be put here
-		this.velocity = 150;
+		this.velocity = 80;
 		// After trying out your robot, try uncommenting the import at the top,
 		// and the next line:
 
