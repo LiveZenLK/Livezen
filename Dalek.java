@@ -1,4 +1,3 @@
-package LiveZen;
 import robocode.*;
 import java.awt.Color;
 import static robocode.util.Utils.normalRelativeAngleDegrees;
@@ -180,7 +179,7 @@ public class Dalek extends CharlieBot
 
   public void onHitByBullet(HitByBulletEvent e) {
 		// Replace the next line with any behavior you would like
-		behind(60);
+		back(60);
 	}
 
  	/**
