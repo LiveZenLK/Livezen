@@ -6,8 +6,32 @@ import java.awt.Color;
 /**
  * LiveZen1 - a robot by (your name here)
  */
-public class Dalek extends AlphaBot
+public class Dalek extends BravoBot
 {
+
+
+
+  // Checklist POST Test round
+  // there's clearly a wall bot and most likely more will follow suit.
+  // If there are more wall bots, they'll potentially kill each other.
+  // If im not a wall bot, I'll have trouble surviving.
+  // We have to figure out how to survive the longest while also not being a wall bot.
+  // Move consitently, dont stop moving.
+  // Can we change our behaviour at a certain game tick to become a wallbot?
+  // Need to find the wall bot code.
+
+
+   // New Rules. Round Two
+   // We cant move the gun, meaning what's logically the best strategy?
+   // I want to be able to move towards a target and keep firing
+   // We'll test changing the firing method for more accuracy.
+   // We'll have to turn the bot to fire as a little bit ahead of the next robot
+   // Implement prediction? will be based on speed of projectile and, speed of enemy? But we can't get the enemy speed?.. or location? I think?..
+   // We can assume that the enemy players are only going to move forward. based on previous two rounds.
+   //
+   //
+
+
 	/**
 	 * run: LiveZen1's default behavior
 	 */
@@ -15,7 +39,7 @@ public class Dalek extends AlphaBot
 
 	public void run() {
 		// Initialization of the robot should be put here
-		this.velocity = 80;
+		this.velocity = 65;
 		 setColors(Color.red,Color.red,Color.red); // body,gun,radar
 
 		// Robot main loop
@@ -46,7 +70,7 @@ public class Dalek extends AlphaBot
 
 	public void movement( double velocity ){
 
-		turnLeft(3600);
+		turnLeft(30);
 		ahead(getVelocity());
 
 	}
@@ -66,7 +90,8 @@ public class Dalek extends AlphaBot
 	 */
 	public void onHitByBullet(HitByBulletEvent e) {
 		// Replace the next line with any behavior you would like
-		back(50);
+		ahead(100);
+		turnLeft(120);
 	}
 
 	void OnHitRobot(HitRobotEvent evnt){
@@ -81,11 +106,6 @@ public class Dalek extends AlphaBot
 		System.out.println("");
 		movement(reverseMovement(getVelocity()));
 	}
-	@Override
-	 public void turnLeft(double degrees) {
-        super.turnLeft(degrees / 10.0D);
-		System.out.println(degrees/10.0D);
-    }
 
   public double getVelocity(){
     return this.velocity;
@@ -94,15 +114,5 @@ public class Dalek extends AlphaBot
   public void setVelocity(double velocity){
     this.velocity = velocity;
   }
-
-
-  // Checklist POST Test round
-  // there's clearly a wall bot and most likely more will follow suit.
-  // If there are more wall bots, they'll potentially kill each other.
-  // If im not a wall bot, I'll have trouble surviving.
-  // We have to figure out how to survive the longest while also not being a wall bot.
-  // Move consitently, dont stop moving.
-  // Can we change our behaviour at a certain game tick to become a wallbot?
-  // Need to find the wall bot code.
 
 }
